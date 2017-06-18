@@ -9,4 +9,4 @@ docker build -t [registry]/ecs-sample .
 
 2. Push back to your registry(ECR):
 
-docker push 556071873790.dkr.ecr.ap-southeast-1.amazonaws.com/ecs-sample
+docker push 55607xxxxx790.dkr.ecr.ap-southeast-1.amazonaws.com/ecs-sample
