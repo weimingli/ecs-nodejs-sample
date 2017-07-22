@@ -1,4 +1,4 @@
-FROM node:boron
+FROM 360316469267.dkr.ecr.cn-north-1.amazonaws.com.cn/node
 
 # Create app directory
 RUN mkdir -p /usr/src/app
