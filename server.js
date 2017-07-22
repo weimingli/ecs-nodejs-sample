@@ -10,7 +10,7 @@ const PORT = 80;
 // App
 const app = express();
 app.get('/', function (req, res) {
-  res.send('<h1>Hello, This is a sample app</h1></br> <h2>Container IP Address:  ' + ip.address() + '</h2>');
+  res.send('<h1>Hello, ECS Sample App</h1></br> <h2>Container IP Address:  ' + ip.address() + '</h2>');
 });
 
 app.listen(PORT);
