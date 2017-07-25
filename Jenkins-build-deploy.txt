@@ -1,0 +1,46 @@
+$(aws ecr get-login --no-include-email --region cn-north-1 2>&1 | tail -n 1)
+docker build -t ecs-demo .
+docker tag ecs-demo:latest 360316469267.dkr.ecr.cn-north-1.amazonaws.com.cn/ecs-demo:latest
+docker push 360316469267.dkr.ecr.cn-north-1.amazonaws.com.cn/ecs-demo:latest
+
+# Generating task definition JSON file
+cat > ecs.json << EOL
+{
+  "containerDefinitions": [
+    {
+      "volumesFrom": [],
+      "memory": 300,
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "mountPoints": [],
+      "name": "ecs-demo",
+      "environment": [],
+      "links": [],
+      "image": "360316469267.dkr.ecr.cn-north-1.amazonaws.com.cn/ecs-demo:latest",
+      "cpu": 10
+    }
+  ],
+  "placementConstraints": [],
+  "volumes": [],
+  "family": "ecs-demo-task-def"
+}
+EOL
+
+# Register a new task definition
+aws ecs register-task-definition  --cli-input-json file://ecs.json --region cn-north-1
+
+# Get latest Task Revision number
+TASK_REVISION=`aws ecs describe-task-definition --task-definition ecs-demo-task-def --region cn-north-1 | egrep "revision" | tr "/" " " | awk '{print $2}' | sed 's/"$//'`
+
+# Update the service and make deployment
+aws ecs update-service --cluster mycluster --service ecs-demo-service --task-definition ecs-demo-task-def:$TASK_REVISION --region cn-north-1
+
+
+
